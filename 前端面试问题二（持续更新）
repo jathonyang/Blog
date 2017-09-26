@@ -1,0 +1,283 @@
+1、为什么要使用css预编译
+2、cookie,sessionStorage和localStorage的区别
+3、如何实现浏览器内多个标签页之间的通信? (阿里)
+4、websocket如何兼容低浏览器
+5、如何居中div
+6、css3新特性
+7、用css穿件一个三角形的原理
+8、经常li之间有看不见的间隔，造成的原因
+9、为什么要清除浮动
+10、元素浮动后,display变成了什么
+11、如果需要手动写动画，你认为最小时间间隔是多久，为什么？（阿里）
+12、cookie隔离
+13、数组的随机排序
+14、什么是window对象，什么是document对象
+15、如何判断一个对象是否属于某个类
+16、new操作符干了什么
+17、Javascript中，有一个函数，执行时对象查找时，永远不会去查找原型，这个函数是？
+18、如何检测浏览器版本
+19、什么是polyfill
+20、Object.is()
+20、前端性能优化
+21、http状态码常用的
+为什么要使用css预编译
+------------
+
+1、css无法递归式定义
+2、解决复用性不够
+3、可以缓解浏览器兼容造成的冗余
+
+cookie,sessionStorage和localStorage的区别
+-------------------------------------
+
+cookie用来在浏览器和服务器中传递并且总量很小
+sessionStorage和localStorage用于存储本地数据，存储较大
+localStorage是持久性存储
+
+如何实现浏览器内多个标签页之间的通信? (阿里)
+------------------------
+
+websocket、shareWorker
+也可以调用localstorge、cookies等本地存储方式
+将有专门的教程讲解websocket
+
+websocket如何兼容低浏览器
+-----------------
+
+  Adobe Flash Socket 、
+  ActiveX HTMLFile (IE) 、
+  基于 multipart 编码发送 XHR 、
+  基于长轮询的 XHR
+
+如何居中div
+-------
+
+1、水平居中,给定宽度
+
+	
+
+div{
+		width: 200px
+		margin:0 auto
+	}
+
+2、绝对定位居中
+
+	div {
+	position: absolute;
+	width: 300px;
+	height: 300px;
+	margin: auto;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+3、水平居中
+
+	确定宽高
+	div {
+	position: relative;
+	width: 500px;
+	height: 300px;
+	top: 50%;
+	left: 50%;
+	margin: -150px 0 0 -250px;
+}
+	不知道宽高
+	
+
+	div {
+	position: relative;
+	width: 500px;
+	height: 300px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
+	使用flex布局
+	
+
+ 
+
+       .container {
+        	display: flex;
+        	align-items: center;
+        	justify-content: center;
+        }
+        .container div {
+        	width: 100px;
+        	height:100px;
+        }
+
+css3新特性
+-------
+
+文字特效：text-shadow
+线性渐变：gradient
+旋转：transform
+圆角：border-radius
+新增选择器:not(:input)
+没写全，但是够用了
+
+	
+
+用css穿件一个三角形的原理
+--------------
+
+把上、左、右三条边隐藏掉
+
+    #demo {
+    	width: 0;
+    	height: 0;
+    	border-width: 20px;
+    	border-style: solid;
+    	border-color: transparent transparent red transparent;
+    }
+
+
+    
+
+经常li之间有看不见的间隔，造成的原因
+-------------------
+
+回车和空格会被应用样式,解决方法：把字符大小设置成font-size:0
+
+为什么要清除浮动
+--------
+
+清除浮动是为了清除浮动元素产生的影响，浮动的元素高度将会塌陷，后面的布局也就不能实现，这儿讲一种方法
+&:after
+
+	
+
+元素浮动后,display变成了什么
+------------------
+
+	display: inline-block
+
+如果需要手动写动画，你认为最小时间间隔是多久，为什么？
+---------------------------
+
+	多数显示屏默认频率是60hz，所以理论上最小间隔1/60*1000ms = 16.7ms
+
+	
+
+cookie隔离
+--------
+
+cookie有域的限制,跨期提交请求时，不会携带cookie
+
+数组的随机排序
+-------
+
+方法一、
+	var arr = [1,2,3,4,5,7,8,9]
+function randSort(arr) {
+	for (var i = 0, len = arr.length; i < len; i++) {
+		var rand = parseInt(Math.random()*len)
+		var temp = arr[rand]
+		arr[rand] = arr[i]
+		arr[i] = temp
+	}
+	return arr
+}
+方法二
+var arr = [1,2,3,4,5,7,8,9]
+function randSort2(arr) {
+	var mixedArray = []
+	while(arr.length > 0) {
+		var randomIndex = parseInt(Math.random()*arr.length)
+		mixedArray.push(arr[randomIndex])
+		arr.splice(randomIndex, 1)
+	}
+	return mixedArray
+}
+方法三
+var arr = [1,2,3,4,5,7,8,9]
+arr.sort(function () {
+	return Math.random() - 0.5
+})
+
+ 
+
+什么是window对象，什么是document对象
+-------------------------
+
+window是浏览器打开的窗口，document是Document对象的一个只读引用
+
+ [“1”, “2”, “3”].map(parseInt) 答案是多少？
+[1, NaN, NaN]
+
+ 
+
+如何判断一个对象是否属于某个类
+---------------
+
+return a instance of Person
+
+new操作符干了什么
+----------
+
+1、创建一个空对象，并且this引用该对象，同时还继承了该函数的对象
+2、属性和方法都加入到this引用的对象中
+3、新创建的对象由this所引用，最后隐式返回this
+
+Javascript中，有一个函数，执行时对象查找时，永远不会去查找原型，这个函数是？
+-------------------------------------------
+
+ Oject.hasOwnProperty(name),返回布尔值，不会去寻找原型链上的属性
+
+如何检测浏览器版本
+---------
+
+功能检测、userAgent特征检测：navigator.userAgent
+
+	
+
+什么是polyfill
+-----------
+
+ polyfill 是“在旧版浏览器上复制标准 API 的 JavaScript 补充”,可以动态地加载 JavaScript 代码或库，在不支持这些标准 API 的浏览器中模拟它们。
+
+ 
+
+Object.is()
+-----------
+
+  Object.is在处理-0和+0是返回false,但是Object.is(NaN, NaN)返回true
+
+前端性能优化
+------
+
+   1、减少http请求次数：雪碧图、js,css源码压缩、图片大小控制合适，cdn托管
+   2、使用ajax代替整体刷新页面
+   3、减少dom操作
+   4、设置样式时更多的时候使用className而不是style
+   5、少用全局变量、缓存dom节点查找结果
+   6、避免使用css expression
+   7、图片懒加载（有专门的文章讲解图片懒加载）
+
+http状态码常用的
+----------
+
+100  Continue    继续，一般在发送post请求时，已发送了http header之后服务端将返回此信息，表示确认，之后发送具体参数信息
+200  OK         正常返回信息
+201  Created      请求成功并且服务器创建了新的资源
+202  Accepted     服务器已接受请求，但尚未处理
+301  Moved Permanently  请求的网页已永久移动到新位置。
+302 Found          临时性重定向。
+303 See Other      临时性重定向，且总是使用 GET 请求新的 URI。
+304  Not Modified 自从上次请求后，请求的网页未修改过。
+
+400 Bad Request  服务器无法理解请求的格式，客户端不应当尝试再次使用相同的内容发起请求。
+401 Unauthorized 请求未授权。
+403 Forbidden      禁止访问。
+404 Not Found      找不到如何与 URI 相匹配的资源。
+
+500 Internal Server Error  最常见的服务器端错误。
+503 Service Unavailable 服务器端暂时无法处理请求（可能是过载或维护）。
+
+写技术文档是真的累，点个star以资奖励
+我的githubhttps://github.com/skychenbo如果觉得对你有用，欢迎点一个star
