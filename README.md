@@ -10,6 +10,3 @@
 
 * [前端面试之webpack篇](https://github.com/skychenbo/interviewr/issues/4)
 
-* [前端面试之websocket篇](https://github.com/skychenbo/interviewr/issues/5)
-
-原创文章真的很累啊，而且还这么高产，你要是觉得对你有帮助，那就点个star咯
