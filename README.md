@@ -1,5 +1,5 @@
-# interviewr
-收集了许多面试者的前端面试题，会不断更新，包括答案
+# blog
+我的文章
 
 文章列表
 > [前端面试问题（一）](https://github.com/skychenbo/interviewr/issues/1)
