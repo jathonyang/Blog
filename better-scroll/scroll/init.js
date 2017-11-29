@@ -188,6 +188,8 @@ export function initMixin(BScroll) {
         eventOperation(window, 'resize', this)
 
         if (this.options.click) {
+            // 这里的this指向的是function BScroll() {....}这个函数，意思是说
+            // el.removeEventListener(type,function BScroll{}...)
             eventOperation(this.wrapper, 'click', this, true)
         }
 
