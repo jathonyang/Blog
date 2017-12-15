@@ -17,6 +17,6 @@
 > [BetterScroll：可能是目前最好用的移动端滚动插件(源码分析)](https://github.com/skychenbo/Blog/issues/6)
 
 ## Vue相关
-> [Vue原理以及简单实现](https://github.com/skychenbo/Blog/issues/9)
+> [Vue响应式原理以及简单实现](https://github.com/skychenbo/Blog/issues/9)
 
 > [vitual-dom原理与简单实现](https://github.com/skychenbo/Blog/issues/7)
