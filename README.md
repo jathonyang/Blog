@@ -20,3 +20,12 @@
 > [Vue响应式原理以及简单实现](https://github.com/skychenbo/Blog/issues/9)
 
 > [vitual-dom原理与简单实现](https://github.com/skychenbo/Blog/issues/7)
+
+> [vue-router源码学习](https://github.com/skychenbo/Blog/issues/12)
+
+> [vuex源码阅读分析](https://github.com/skychenbo/Blog/issues/10)
+
+
+## 其它
+
+> [前端MVC、MVVM的简单实现](https://github.com/skychenbo/Blog/issues/11)
