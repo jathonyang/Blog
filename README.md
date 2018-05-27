@@ -29,3 +29,7 @@
 ## 其它
 
 > [前端MVC、MVVM的简单实现](https://github.com/skychenbo/Blog/issues/11)
+
+
+## 我是读书人，哈哈
+> [《区块链+》读后感](https://github.com/skychenbo/Blog/issues/13)
