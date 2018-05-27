@@ -33,4 +33,7 @@
 
 ## 我是读书人，哈哈
 > [《区块链+》读后感](https://github.com/skychenbo/Blog/issues/13)
+
 > [《帝霸》读后感](https://github.com/skychenbo/Blog/issues/14)
+
+> [小说](https://github.com/skychenbo/Blog/issues/15) （大二写的小说写了一部分，感觉自己缺乏阅历以后工作了在写）
