@@ -43,9 +43,16 @@
 
 
 ## 移动端
+### 日常bug
+> [IOS评论框不贴底](https://github.com/skychenbo/Blog/issues/26)
+
 ### `zepto`
 > [`zepto`源码结构](https://github.com/skychenbo/Blog/issues/20)
+
 > [`zepto`源码`ajax`模块学习](https://github.com/skychenbo/Blog/issues/21)
+
 > [`zepto`源码`deferred`模块学习](https://github.com/skychenbo/Blog/issues/22)
+
 > [`zepto`源码学习`Event`模块](https://github.com/skychenbo/Blog/issues/23)
+
 > [`zepto`源码`Callback`模块学习](https://github.com/skychenbo/Blog/issues/25)
