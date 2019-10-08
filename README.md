@@ -44,7 +44,8 @@
 
 ## 移动端
 ### 日常bug
-> [IOS评论框不贴底](https://github.com/skychenbo/Blog/issues/26)
+> [`IOS`评论框不贴底](https://github.com/skychenbo/Blog/issues/26)
+> [`webapck`多页面内存溢出](https://github.com/skychenbo/Blog/issues/27)
 
 ### `zepto`
 > [`zepto`源码结构](https://github.com/skychenbo/Blog/issues/20)
