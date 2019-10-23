@@ -1,8 +1,26 @@
 因为自己的项目是基于`vue-cli3`进行开发，所以这里只讨论这种情况下的解决办法 
-在进行多页面开发的时候，项目刚开始阶段，因为文件较少，所以代码编译速度还行，但是随着项目逐渐增大，`webpack`编译的速度越来越慢，并且经常出现内存溢出的情况。
+在进行多页面开发的时候，项目刚开始阶段，页面较少，编译速度还能忍受，但是一旦页面增加，多次热更新就造成了内存溢出。
+
+![](https://user-gold-cdn.xitu.io/2019/10/22/16df2a3190505b06?w=916&h=216&f=png&s=27386)
+## 原因
+这里需要借助一个插件来进行性能分析`webpack-bundle-analyzer`，在`vue.config.js`中添加以下代码
+```js
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+configureWebpack: {
+ plugins: [
+    new BundleAnalyzerPlugin(),
+ ],
+}
+```
+下面是自己项目编译的截图
+![](https://user-gold-cdn.xitu.io/2019/10/22/16df2af688c8e455?w=298&h=546&f=png&s=74106)
+
+![](https://user-gold-cdn.xitu.io/2019/10/22/16df2c0b384f2957?w=500&h=97&f=png&s=8376)
+可以看到的是`webpack`把所有的页面都进行了编译，总体积已经达到了`18M`，耗时超过1分钟，在热更新的时候这个体积会变得更大，从而占据`node`的运行内存，导致内存溢出。但是一般在开发的时候，我们一次更改的页面可能就只有几个，所以编译这些多余的页面是没有必要的。那下面就是多种解决方案
+
 下面就是几种尝试的方法，加快编译的速度
 ## 增加`Node`运行内存
-在`Node`中通过`JavaScript`使用内存时只能使用部分内存（`64`位系统下约为`1.4 GB`，`32`位系统下约为`0.7 GB`）。所以不管电脑实际的运行内存是多少，`Node`在运行代码编译的时候，使用内存大小不会发生变化。这样就可能导致因为原有的内存不够，导致内存溢出。所以可以增加`Node`的运行内存，下面是两种方法
+在上面提到在热更新的时候，热更新的代码会大量占据`node`分配的内存，导致内存溢出。那么第一种方式，尝试增加`node`的运行内存。在`Node`中通过`JavaScript`使用内存时只能使用部分内存（`64`位系统下约为`1.4 GB`，`32`位系统下约为`0.7 GB`）。所以不管电脑实际的运行内存是多少，`Node`在运行代码编译的时候，使用内存大小不会发生变化。这样就可能导致因为原有的内存不够，导致内存溢出。下面给出两种方案
 ### 更改`cmd`
 在`node_modules/.bin/vue-cli-server.cmd`把下面代码复制上去
 ```cmd
@@ -19,11 +37,28 @@
 ```cmd
 node --max_old_space_size=4096 node_modules/@vue/cli-service/bin/vue-cli-service.js serve
 ```
-本质上没啥区别，都是通过强行增加`Node`的运行内存，来解决内存溢出的问题。但是这种方法不治本，虽然不会造成内存溢出，但是编译速度还是挺慢的，编译完成还是需要等很久。
+本质上没什么区别，都是增加`Node`分配的内存，在这里把`node`的运行内存提高到`4g`就能够让`webpack`热编译的时候不会内存溢出。使用这种方法，确实是没有在出现内存溢出的情况。但是在首次启动和热编译的时候，速度并没有发生质的提升，首次编译还是达到了1分钟这种难以忍受的速度。如果项目进一步扩大，难道我们需要再次增加`node`的运行内存？
 
-## 配置需要编译的文件
-这种就是按需配置需要编译的文件，为什么出现内存溢出，本质上还是因为需要编译的文件太多了，那我们就可以减少需要编译的页面就可以解决这个问题。   
-首先所有的页面配置都是放在`page.config.js`,如果我们需要对某些特定页面进行配置，就需要过滤所有的页面，获取需要编译的页面，下面是编译文件的写法
+## 过滤编译页面
+在上面截图中可以看到，在编译的时候`webpack`编译了一些不必要的页面，本来我们只需要调试`A`页面，但是`webpack`把所有的页面都进行了编译，某些页面我们可能并不需要，那这里就提出一种思路，对需要调试的页面进行过滤。
+下面是多页面的配置：
+```js
+// page.config.js
+module.exports = {
+    index: {
+        entry: 'src/page/index/main.js', // 页面入口
+        template: 'public/index.html', // 页面模板路径
+        filename: 'index.html' // 输出文件名
+        title: '页面title',
+    }
+}
+// vue.config.js
+const pages = require('./page.config.js')
+module.expors = {
+    pages,
+}
+```
+可以看到的是传统的方案是把多页面的配置全部引入，进行编译，所以这里就提出一种解决方案，对多页面进行过滤，得到我们需要的编译页面，下面是过滤的脚本：
 ```js
 const path = require('path');
 const fs = require('fs');
@@ -52,12 +87,29 @@ if (!/(test|online|serve)/gi.test(buildPath)) {
 } else {
   buildConfig = require('./default');
 }
-module.exports = buildConfig.pages;
+const buildPages = {};
+buildConfig.pages.forEach((name) => {
+  buildPages[name] = pages[name];
+});
+module.exports = buildPages;
 ```
-大多数情况下，一个产品都是由多个业务线构成，每次可能需要更改的就是某一条业务线，就完全可以单独创建一个这条业务线的配置文件，然后再这个文件写入你需要编译的页面名称，就可以单独编译这个页面，或者说在调用通过传入的字符串来编译那些页面
-## 使用`webbpack-dev-serve`钩子进行单独编译
-在webpack进行热更新的时候，实际上是使用了`webpack-dev-server`这个的服务，然后是否有钩子能够给我们提供，如果我们访问哪个页面他就编译那个页面的代码。幸运的是找到，在`devServer`中存在这么一个钩子函数`before`， 那就可以在`vue.config.js`中修改
+这样就可以单独单独编译我们所需要的页面下面是`default.js`的内容:
 ```js
+module.exports = {
+    pages: ['ugcDetail']
+}
+```
+这个文件中`pages`就是我们需要编译的文章，现在`webpack`就过滤了不需要编译的页面，下面是页面编译速度的截图: 
+![](https://user-gold-cdn.xitu.io/2019/10/23/16df65edb2d81e84?w=511&h=81&f=png&s=8101)
+页面的编译速度提高了惊人的`10`倍，因为需要编译的文件少了，所以运行速度也就提高了不少。一般情况下，一个人是负责单独的业务线，别人的代码我们也不需要干涉，所以也能实现一次配置，多次运行的效果。但是有的时候我们也需要更改别人的代码，不能说又加一个配置文件，下面就是借助`webpack`自带的钩子实现编译指定文件。
+## 使用`webbpack-dev-serve`钩子进行单独编译
+在上面`page.config.js`中可以看到每个单页面都有一个入口文件，`webpack`借助这些入口文件进行对每个页面进行单独编译，每个页面编译后的`js`混合到一起也就非常大了，那我们能不能让这些入口文件暂时变成一个空文件，如果需要编译这个页面，在空文件中引入需要编译的入口文件。也就是所有的入口文件都变成了一个空的`js`文件，如果需要编译这个页面，在通过
+```j
+import 入口
+```
+实现单独的页面文件编译。那`webpack`是如何知道我们需要编译的页面呢，在`webpack-dev-serve`中，有一个钩子`before`，在访问页面的时候我们能够拿到页面信息的路径，下面是实现：
+```js
+// vue.config.js
 const compiledPages = [];
 before(app) {
       app.get('*.html', (req, res, next) => {
@@ -82,7 +134,7 @@ before(app) {
       });
     },
 ```
-`multPageConfig`是多页面的配置，在开发环境中，做了一下修改，配置如下:
+多页面配置中以下配置，需要先把入口路径，先缓存起来，然后置空，下面是具体实现
 ```js
 {
     pageName: {
@@ -96,7 +148,7 @@ const util = require('util');
 const outputFile = util.promisify(fs.writeFile);
 async function main() {
   const tasks = [];
-  if (!fs.lstatSync('dev-entries').isDirectory()) {
+  if (!fs.existsSync('dev-entries')) {
     fs.mkdirSync('dev-entries');
   }
   Object.keys(pages).forEach((key) => {
@@ -114,11 +166,11 @@ if (process.env.NODE_ENV === 'development') {
 
 module.exports = pages;
 ```
-在上面文件中，我们首先需要更改多页面的配置，创建一个目录，包含所有的页面的`js`文件，但是需要注意的是这些文件都是空的文件，什么都没有，然后在`vue.config.js`中多页面的配置为
-```js
-pages: multiPageConfig, // 配置多页应用
-```
-因为所有的页面`js`已经被置为空了，所以编译的速度非常快。然后再访问页面的时候，`webpack`已经拦截访问的页面，也就是需要更改的页面，这时候就手动往`dev-entries`目录下写入需要编译的文件，从而实现了访问某个页面就编译哪个页面的代码
+这种方法就是把所有页面入口文件置为空文件，虽然编译了所有的页面但是所有的文件都是空的，所以大大的减少了首次编译的文件大小。
+![](https://user-gold-cdn.xitu.io/2019/10/23/16df7e521b36213a?w=365&h=165&f=png&s=15925)
+
+![](https://user-gold-cdn.xitu.io/2019/10/23/16df7e6ed632cbc0?w=477&h=69&f=png&s=6951)
+速度也从原来的`80`多秒，降低到了`8s`。然后当我们访问某个页面的页面，执行到`before`钩子，进行单独编译，速度也是非常快的。
 
 ## 升级`html-webpack-plugin`版本
 多页面出现内存溢出的问题是因为在编译的时候，实际是一次更改，编译了多个文件，这是`html-webpack-plugin`的问题。因为没生成一个页面，就需要调用一下`new htmlWebpackPlugin()`，多个页面的时候内存就不够用了。所以改一下这个这个`webpack`插件的版本,升级到`4.0.0-beta.8`这个版本。然后再`vue.config.js`中添加下面的配置，这样也不会造成内存溢出。
@@ -139,5 +191,5 @@ configureWebpack: {
 我们需要`Webpack`能同一时间处理多个任务，发挥多核`CPU`电脑的威力，`HappyPack`就能让`Webpack` 做到这点，它把任务分解给多个子进程去并发的执行，子进程处理完后再把结果发送给主进程。可能是我电脑太烂了，装上没啥太大的提升，具体使用方法可以参照这篇文章[webpack优化之HappyPack 实战](https://www.jianshu.com/p/b9bf995f3712)。还有一些细节的地方比如说有些包需要加入编译，但是一般我们在调试的时候只需要在`chrome`上进行调试，开发环境就不用加入编译，多处使用的代码单独打包，这些也就不说了，大家多多尝试
 
 这几种解决多页面内存溢出的方法各有优缺点，读者可根据自己的项目自行决定使用哪种方法，可能有时还需要多种方式组合使用，就看看那个好使好用了。  
-解决这个问题顺便研究了一下`webpack`，配置果然博大精深，难怪市面有流传`webpack`配置工程师。推销一波自己的[github](https://github.com/skychenbo/Blog)最近在抓紧学习，会持续更新文章，希望大家多多关注。
+推销一波自己的[github](https://github.com/skychenbo/Blog)最近在抓紧学习，会持续更新文章，希望大家多多关注。
 
