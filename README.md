@@ -29,6 +29,7 @@
 ## 其它
 
 > [前端MVC、MVVM的简单实现](https://github.com/skychenbo/Blog/issues/11)
+> [浏览器事件循环原理](https://github.com/skychenbo/Blog/issues/28)
 
 
 ## 快应用
