@@ -25,6 +25,8 @@
 
 > [vuex源码阅读分析](https://github.com/skychenbo/Blog/issues/10)
 
+> [深入源码学习Vue响应式原理](https://github.com/skychenbo/Blog/issues/30)
+
 
 ## 其它
 
