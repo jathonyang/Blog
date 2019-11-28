@@ -27,11 +27,14 @@
 
 > [深入源码学习Vue响应式原理](https://github.com/skychenbo/Blog/issues/30)
 
+> [Vue 源码patch过程解析](https://github.com/skychenbo/Blog/issues/33)
+
 
 ## 其它
 
 > [前端MVC、MVVM的简单实现](https://github.com/skychenbo/Blog/issues/11)
 > [浏览器事件循环原理](https://github.com/skychenbo/Blog/issues/28)
+> [前端性能优化总结](https://github.com/skychenbo/Blog/issues/32)
 
 
 ## 快应用
