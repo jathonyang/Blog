@@ -29,29 +29,27 @@
 
 > [Vue 源码patch过程解析](https://github.com/skychenbo/Blog/issues/33)
 
+> [keep-alive实现原理](https://github.com/skychenbo/Blog/issues/34)
+
 
 ## 其它
 
 > [前端MVC、MVVM的简单实现](https://github.com/skychenbo/Blog/issues/11)
+
 > [浏览器事件循环原理](https://github.com/skychenbo/Blog/issues/28)
+
 > [前端性能优化总结](https://github.com/skychenbo/Blog/issues/32)
 
+> [二月前端实战面试](https://github.com/skychenbo/Blog/issues/35)
 
-## 快应用
-
-> [快应用初体验](https://github.com/skychenbo/Blog/issues/16)
-
-> [快应用踩坑与flex讲解](https://github.com/skychenbo/Blog/issues/17)
-
-
-## 我是读书人，哈哈
-> [《区块链+》读后感](https://github.com/skychenbo/Blog/issues/13)
 
 
 ## 移动端
 ### 日常bug
 > [`IOS`评论框不贴底](https://github.com/skychenbo/Blog/issues/26)
+
 > [`webapck`多页面内存溢出](https://github.com/skychenbo/Blog/issues/27)
+
 > [记录一次有难度的后台重构](https://github.com/skychenbo/Blog/issues/31)
 
 
